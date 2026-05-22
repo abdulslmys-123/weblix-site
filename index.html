@@ -218,6 +218,16 @@
     .project-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
     .tag { padding: 5px 14px; background: oklch(15% .007 265); border: 1px solid var(--border); color: var(--cream-dim); font-size: .72rem; font-weight: 600; letter-spacing: .08em; border-radius: 2px; }
 
+    .project { margin-bottom: 96px; padding-bottom: 96px; border-bottom: 1px solid var(--border); }
+    .project:last-of-type { border-bottom: none; margin-bottom: 60px; padding-bottom: 0; }
+
+    .project-footer { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+    .mini-phone { width: 72px; background: var(--ink-3); border-radius: 14px; padding: 5px; box-shadow: 0 8px 24px oklch(0% 0 0 / .5); flex-shrink: 0; }
+    .mini-notch { width: 26px; height: 3px; background: var(--ink); border-radius: 2px; margin: 0 auto 4px; }
+    .mini-screen { border-radius: 9px; overflow: hidden; }
+    .mini-screen img { width: 100%; display: block; }
+    .mini-home { width: 18px; height: 2px; background: oklch(30% .006 265); border-radius: 1px; margin: 4px auto 0; }
+
     .work-next {
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -475,7 +485,7 @@
         <p>Real businesses, real results. Every site we build is live, functional, and already bringing in clients.</p>
       </div>
 
-      <!-- Project: La Beauté -->
+      <!-- Project 01: La Beauté -->
       <div class="project rv">
         <div class="project-meta">
           <span class="project-num">01</span>
@@ -488,27 +498,112 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
           </a>
         </div>
-
         <div class="project-browser">
           <div class="project-bar">
             <div class="p-dots"><span></span><span></span><span></span></div>
             <div class="p-url">abdulslmys-123.github.io/cloudnine/</div>
           </div>
           <div class="project-screen">
-            <img src="labeaute-preview.png" alt="La Beauté — Nail Spa & Beauty Salon website" loading="lazy">
+            <img src="labeaute-preview.png" alt="La Beauté — Nail Spa & Beauty Salon" loading="lazy">
           </div>
         </div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="tag">Nail Spa</span>
+            <span class="tag">Beauty Salon</span>
+            <span class="tag">WhatsApp Booking</span>
+            <span class="tag">Google Profile</span>
+          </div>
+          <div class="project-device">
+            <div class="mini-phone">
+              <div class="mini-notch"></div>
+              <div class="mini-screen"><img src="labeaute-mobile.png" alt="" loading="lazy"></div>
+              <div class="mini-home"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div class="project-tags">
-          <span class="tag">Website Design</span>
-          <span class="tag">WhatsApp Booking</span>
-          <span class="tag">Google Profile</span>
-          <span class="tag">Mobile-First</span>
+      <!-- Project 02: Cloud Nine Café -->
+      <div class="project rv d1">
+        <div class="project-meta">
+          <span class="project-num">02</span>
+          <div class="project-info">
+            <h3 class="project-name">Cloud Nine</h3>
+            <p class="project-type">Café &amp; Coffee Shop &nbsp;&middot;&nbsp; Cairo</p>
+          </div>
+          <a href="https://abdulslmys-123.github.io/cloudnine2/" class="project-link" target="_blank" rel="noopener">
+            View Live
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </a>
+        </div>
+        <div class="project-browser">
+          <div class="project-bar">
+            <div class="p-dots"><span></span><span></span><span></span></div>
+            <div class="p-url">abdulslmys-123.github.io/cloudnine2/</div>
+          </div>
+          <div class="project-screen">
+            <img src="cloudnine2-preview.png" alt="Cloud Nine — Café & Coffee Shop" loading="lazy">
+          </div>
+        </div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="tag">Café</span>
+            <span class="tag">Restaurant</span>
+            <span class="tag">WhatsApp Booking</span>
+            <span class="tag">Mobile-First</span>
+          </div>
+          <div class="project-device">
+            <div class="mini-phone">
+              <div class="mini-notch"></div>
+              <div class="mini-screen"><img src="cloudnine2-mobile.png" alt="" loading="lazy"></div>
+              <div class="mini-home"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 03: S Beauty Salon -->
+      <div class="project rv d2">
+        <div class="project-meta">
+          <span class="project-num">03</span>
+          <div class="project-info">
+            <h3 class="project-name">S Beauty Salon</h3>
+            <p class="project-type">Hair &amp; Beauty Salon &nbsp;&middot;&nbsp; Cairo</p>
+          </div>
+          <a href="https://abdulslmys-123.github.io/S-Beauty-SALON/" class="project-link" target="_blank" rel="noopener">
+            View Live
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </a>
+        </div>
+        <div class="project-browser">
+          <div class="project-bar">
+            <div class="p-dots"><span></span><span></span><span></span></div>
+            <div class="p-url">abdulslmys-123.github.io/S-Beauty-SALON/</div>
+          </div>
+          <div class="project-screen">
+            <img src="sbeauty-preview.png" alt="S Beauty Salon — Hair & Beauty" loading="lazy">
+          </div>
+        </div>
+        <div class="project-footer">
+          <div class="project-tags">
+            <span class="tag">Hair Salon</span>
+            <span class="tag">Beauty</span>
+            <span class="tag">WhatsApp Booking</span>
+            <span class="tag">Google Profile</span>
+          </div>
+          <div class="project-device">
+            <div class="mini-phone">
+              <div class="mini-notch"></div>
+              <div class="mini-screen"><img src="sbeauty-mobile.png" alt="" loading="lazy"></div>
+              <div class="mini-home"></div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- CTA: next project -->
-      <div class="work-next rv d2">
+      <div class="work-next rv d3">
         <div>
           <p class="work-next-label">Your business</p>
           <p class="work-next-title">Could be next on this list.</p>
