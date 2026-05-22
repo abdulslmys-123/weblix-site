@@ -8,658 +8,295 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     /* ── TOKENS ──────────────────────────────── */
     :root {
-      --ink:        oklch(7.5% 0.008 265);
-      --ink-1:      oklch(11%  0.007 265);
-      --ink-2:      oklch(15%  0.007 265);
-      --ink-3:      oklch(23%  0.006 265);
-      --gold:       oklch(80%  0.12  76);
-      --gold-dim:   oklch(58%  0.09  76);
-      --cream:      oklch(93%  0.005 85);
-      --cream-dim:  oklch(65%  0.006 85);
-      --muted:      oklch(43%  0.006 85);
-      --border:     oklch(18%  0.007 265);
-      --f-display:  'Cormorant', Georgia, serif;
-      --f-body:     'Syne', system-ui, sans-serif;
-      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --ink:       oklch(7.5% 0.008 265);
+      --ink-1:     oklch(11%  0.007 265);
+      --ink-2:     oklch(15%  0.007 265);
+      --ink-3:     oklch(22%  0.006 265);
+      --gold:      oklch(80%  0.12  76);
+      --gold-dim:  oklch(58%  0.09  76);
+      --cream:     oklch(93%  0.005 85);
+      --cream-dim: oklch(65%  0.006 85);
+      --muted:     oklch(43%  0.006 85);
+      --border:    oklch(18%  0.007 265);
+      --f-display: 'Cormorant', Georgia, serif;
+      --f-body:    'Syne', system-ui, sans-serif;
+      --ease:      cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* ── RESET ───────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      background: var(--ink);
-      color: var(--cream);
-      font-family: var(--f-body);
-      line-height: 1.65;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
+    html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { background: var(--ink); color: var(--cream); font-family: var(--f-body); line-height: 1.65; overflow-x: hidden; cursor: none; }
     a { color: inherit; text-decoration: none; }
-    img, svg { display: block; max-width: 100%; }
+    img { display: block; max-width: 100%; }
 
     /* ── CURSOR ──────────────────────────────── */
     .cursor {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 10px; height: 10px;
-      background: var(--gold);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: width 0.35s var(--ease-out), height 0.35s var(--ease-out), opacity 0.3s;
+      transition: width .35s var(--ease), height .35s var(--ease);
       mix-blend-mode: difference;
     }
-    .cursor.expanded { width: 44px; height: 44px; opacity: 0.55; }
+    .cursor.big { width: 44px; height: 44px; opacity: .55; }
     @media (hover: none) { .cursor { display: none; } body { cursor: auto; } }
 
     /* ── GRAIN ───────────────────────────────── */
-    .grain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 500;
-      opacity: 0.04;
-      background-repeat: repeat;
-    }
+    .grain { position: fixed; inset: 0; pointer-events: none; z-index: 500; opacity: .04; background-repeat: repeat; }
 
     /* ── CONTAINER ───────────────────────────── */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 clamp(20px, 4vw, 64px);
-    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 64px); }
 
     /* ── NAV ─────────────────────────────────── */
     .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       padding: 22px clamp(20px, 4vw, 64px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background 0.5s, border-color 0.5s;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background .5s, border-color .5s;
     }
-    .nav.scrolled {
-      background: oklch(7.5% 0.008 265 / 0.9);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--f-display);
-      font-size: 1.55rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
-    .nav-logo-mark { color: var(--gold); }
-    .nav-links {
-      display: flex;
-      gap: 36px;
-      list-style: none;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .nav-links a { color: var(--muted); transition: color 0.2s; }
+    .nav.on { background: oklch(7.5% 0.008 265 / .92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-size: 1.55rem; font-weight: 700; }
+    .logo-star { color: var(--gold); }
+    .nav-links { display: flex; gap: 36px; list-style: none; font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+    .nav-links a { color: var(--muted); transition: color .2s; }
     .nav-links a:hover { color: var(--cream); }
-    .nav-cta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      background: var(--gold);
-      color: var(--ink);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-radius: 2px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+    .nav-wa { display: flex; align-items: center; gap: 8px; padding: 10px 22px; background: var(--gold); color: var(--ink); font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; transition: opacity .2s, transform .2s; }
+    .nav-wa:hover { opacity: .88; transform: translateY(-1px); }
     @media (max-width: 768px) { .nav-links { display: none; } }
 
     /* ── HERO ────────────────────────────────── */
     .hero {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-top: 100px;
-      padding-bottom: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      padding: 120px clamp(20px, 4vw, 64px) 64px;
+      max-width: 1200px;
+      margin: 0 auto;
       position: relative;
-      overflow: hidden;
     }
     .hero-bg {
-      position: absolute;
-      inset: 0;
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
       background:
-        radial-gradient(ellipse 55% 50% at 72% 38%, oklch(22% 0.05 76 / 0.18), transparent),
-        radial-gradient(ellipse 45% 65% at 15% 85%, oklch(12% 0.02 265 / 0.6), transparent);
+        radial-gradient(ellipse 50% 60% at 75% 35%, oklch(22% .05 76 / .16), transparent),
+        radial-gradient(ellipse 40% 50% at 10% 80%, oklch(12% .02 265 / .5), transparent);
     }
-    .hero-inner { position: relative; z-index: 1; }
 
-    .hero-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 28px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeUp 0.6s var(--ease-out) 0.2s forwards;
-    }
-    .hero-title {
-      font-family: var(--f-display);
-      font-size: clamp(68px, 13.5vw, 188px);
-      font-weight: 700;
-      line-height: 0.87;
-      letter-spacing: -0.025em;
-      color: var(--cream);
-      margin-bottom: 44px;
-      opacity: 0;
-      transform: translateY(32px);
-      animation: fadeUp 0.9s var(--ease-out) 0.38s forwards;
-    }
+    .hero-left {}
+    .hero-label { font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; opacity: 0; transform: translateY(10px); animation: fadeUp .6s var(--ease) .2s forwards; }
+    .hero-title { font-family: var(--f-display); font-size: clamp(60px, 9.5vw, 136px); font-weight: 700; line-height: .88; letter-spacing: -.025em; color: var(--cream); margin-bottom: 36px; opacity: 0; transform: translateY(28px); animation: fadeUp .9s var(--ease) .38s forwards; }
     .hero-title em { font-style: italic; color: var(--gold); }
-
-    .hero-bottom {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: 48px;
-      border-top: 1px solid var(--border);
-      padding-top: 28px;
-      opacity: 0;
-      animation: fadeIn 0.9s var(--ease-out) 0.85s forwards;
-    }
-    .hero-tagline-en {
-      font-size: clamp(16px, 2.2vw, 24px);
-      font-weight: 300;
-      line-height: 1.5;
-      color: var(--cream-dim);
-    }
+    .hero-tagline { border-top: 1px solid var(--border); padding-top: 24px; opacity: 0; animation: fadeIn .9s var(--ease) .85s forwards; }
+    .hero-tagline-en { font-size: clamp(15px, 1.6vw, 20px); font-weight: 300; line-height: 1.5; color: var(--cream-dim); margin-bottom: 12px; }
     .hero-tagline-en strong { color: var(--cream); font-weight: 600; }
-    .hero-tagline-ar {
-      font-family: var(--f-display);
-      font-size: clamp(22px, 3vw, 40px);
-      font-weight: 600;
-      text-align: right;
-      direction: rtl;
-      color: var(--gold);
-      line-height: 1.4;
-      white-space: nowrap;
-    }
+    .hero-tagline-ar { font-family: var(--f-display); font-size: clamp(18px, 2.2vw, 30px); font-weight: 600; direction: rtl; color: var(--gold); line-height: 1.4; }
 
-    .hero-scroll {
+    /* Device stack */
+    .hero-right { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; opacity: 0; animation: fadeIn 1s var(--ease) 1s forwards; }
+    .device-browser {
       position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      animation: fadeIn 1s var(--ease-out) 1.3s both;
+      width: min(420px, 90%);
+      background: var(--ink-2);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px oklch(0% 0 0 / .6), 0 0 0 1px oklch(100% 0 0 / .06);
+      top: 20px; left: 0;
+      transform: rotate(-1.5deg);
+      z-index: 1;
     }
-    .hero-scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--gold-dim), transparent);
-      animation: scrollPulse 2.2s ease-in-out 1.6s infinite;
-    }
+    .browser-bar { background: var(--ink-3); padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dots span { width: 10px; height: 10px; border-radius: 50%; display: block; }
+    .browser-dots span:nth-child(1) { background: #ff5f57; }
+    .browser-dots span:nth-child(2) { background: #febc2e; }
+    .browser-dots span:nth-child(3) { background: #28c840; }
+    .browser-url { flex: 1; background: oklch(8% .007 265); border-radius: 4px; padding: 4px 10px; font-size: 10px; color: var(--muted); font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .browser-screen img { width: 100%; display: block; }
 
-    @media (max-width: 640px) {
-      .hero-bottom { grid-template-columns: 1fr; gap: 20px; }
-      .hero-tagline-ar { text-align: left; direction: ltr; }
+    .device-phone {
+      position: absolute;
+      right: 20px; bottom: 0;
+      width: 130px;
+      background: var(--ink-3);
+      border-radius: 26px;
+      padding: 8px;
+      box-shadow: 0 20px 60px oklch(0% 0 0 / .7), 0 0 0 1px oklch(100% 0 0 / .07);
+      transform: rotate(3deg);
+      z-index: 2;
     }
+    .phone-notch { width: 50px; height: 5px; background: var(--ink); border-radius: 3px; margin: 0 auto 6px; }
+    .phone-screen { border-radius: 18px; overflow: hidden; }
+    .phone-screen img { width: 100%; display: block; }
+    .phone-home { width: 32px; height: 3px; background: oklch(35% .006 265); border-radius: 2px; margin: 6px auto 0; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 100px; }
+      .hero-right { height: 280px; }
+      .device-browser { width: min(340px, 90%); }
+    }
+    @media (max-width: 480px) { .hero-right { display: none; } }
 
     /* ── MARQUEE ─────────────────────────────── */
-    .marquee-wrap {
-      overflow: hidden;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--ink-1);
-      padding: 14px 0;
-    }
-    .marquee-track {
-      display: flex;
-      animation: marqueeScroll 32s linear infinite;
-      white-space: nowrap;
-    }
+    .marquee-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--ink-1); padding: 14px 0; }
+    .marquee-track { display: flex; animation: marq 32s linear infinite; white-space: nowrap; }
     .marquee-track:hover { animation-play-state: paused; }
-    .marquee-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 22px;
-      padding: 0 22px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .marquee-item .dot { color: var(--gold); font-size: 0.5rem; }
+    .m-item { display: inline-flex; align-items: center; gap: 22px; padding: 0 22px; font-size: .7rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+    .m-item .dot { color: var(--gold); font-size: .5rem; }
 
     /* ── SECTION COMMON ──────────────────────── */
     .section { padding: clamp(64px, 9vw, 130px) 0; }
-    .section-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-    .section-heading {
-      font-family: var(--f-display);
-      font-size: clamp(38px, 5.5vw, 68px);
-      font-weight: 700;
-      line-height: 1.02;
-      letter-spacing: -0.022em;
-      color: var(--cream);
-    }
-    .section-heading em { font-style: italic; color: var(--gold); }
+    .s-label { font-size: .68rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .s-head { font-family: var(--f-display); font-size: clamp(36px, 5vw, 64px); font-weight: 700; line-height: 1.02; letter-spacing: -.022em; color: var(--cream); }
+    .s-head em { font-style: italic; color: var(--gold); }
 
     /* ── REVEAL ──────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(26px);
-      transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-d1 { transition-delay: 0.1s; }
-    .reveal-d2 { transition-delay: 0.2s; }
-    .reveal-d3 { transition-delay: 0.3s; }
-    .reveal-d4 { transition-delay: 0.42s; }
+    .rv { opacity: 0; transform: translateY(26px); transition: opacity .75s var(--ease), transform .75s var(--ease); }
+    .rv.show { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; } .d4 { transition-delay: .42s; }
 
     /* ── INTRO ───────────────────────────────── */
     .intro { background: var(--ink-1); }
-    .intro-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 72px;
-      align-items: center;
-    }
-    .intro-body {
-      font-size: clamp(17px, 1.7vw, 21px);
-      font-weight: 300;
-      line-height: 1.7;
-      color: var(--cream-dim);
-    }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .intro-body { font-size: clamp(17px, 1.7vw, 21px); font-weight: 300; line-height: 1.7; color: var(--cream-dim); }
     .intro-body strong { color: var(--cream); font-weight: 600; }
-    .intro-ar {
-      font-family: var(--f-display);
-      font-size: clamp(26px, 3.2vw, 44px);
-      font-weight: 600;
-      line-height: 1.38;
-      direction: rtl;
-      text-align: right;
-      color: var(--cream);
-    }
-    .intro-ar .accent { color: var(--gold); }
-    @media (max-width: 768px) {
-      .intro-grid { grid-template-columns: 1fr; gap: 40px; }
-      .intro-ar { text-align: left; direction: ltr; }
-    }
+    .intro-ar { font-family: var(--f-display); font-size: clamp(24px, 3vw, 42px); font-weight: 600; line-height: 1.4; direction: rtl; text-align: right; color: var(--cream); }
+    .intro-ar .ac { color: var(--gold); }
+    @media (max-width: 768px) { .intro-grid { grid-template-columns: 1fr; gap: 36px; } .intro-ar { direction: ltr; text-align: left; } }
 
     /* ── SERVICES ────────────────────────────── */
-    .services-header {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 60px;
-      margin-bottom: 56px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid var(--border);
-      align-items: end;
-    }
-    .services-header p {
-      font-size: 1rem;
-      color: var(--cream-dim);
-      line-height: 1.7;
-      max-width: 50ch;
-    }
-    .services-list { display: flex; flex-direction: column; }
-    .service-item {
-      display: grid;
-      grid-template-columns: 72px 1fr auto;
-      gap: 28px;
-      align-items: start;
-      padding: 36px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: default;
-    }
-    .service-item:hover .service-title { color: var(--gold); }
-    .service-num {
-      font-family: var(--f-display);
-      font-size: 0.82rem;
-      font-weight: 300;
-      color: var(--muted);
-      padding-top: 6px;
-      letter-spacing: 0.04em;
-    }
-    .service-title {
-      font-family: var(--f-display);
-      font-size: clamp(22px, 2.8vw, 38px);
-      font-weight: 700;
-      color: var(--cream);
-      margin-bottom: 10px;
-      line-height: 1.05;
-      transition: color 0.3s;
-    }
-    .service-desc {
-      font-size: 0.88rem;
-      color: var(--cream-dim);
-      line-height: 1.65;
-      max-width: 52ch;
-    }
-    .service-ar {
-      font-family: var(--f-display);
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--muted);
-      direction: rtl;
-      text-align: right;
-      padding-top: 6px;
-      white-space: nowrap;
-      transition: color 0.3s;
-    }
-    .service-item:hover .service-ar { color: var(--gold-dim); }
-    @media (max-width: 900px) {
-      .services-header { grid-template-columns: 1fr; gap: 20px; }
-    }
-    @media (max-width: 640px) {
-      .service-item { grid-template-columns: 48px 1fr; }
-      .service-ar { display: none; }
-    }
+    .srv-header { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; margin-bottom: 52px; padding-bottom: 36px; border-bottom: 1px solid var(--border); align-items: end; }
+    .srv-header p { font-size: 1rem; color: var(--cream-dim); line-height: 1.7; max-width: 50ch; }
+    .srv-list { display: flex; flex-direction: column; }
+    .srv-item { display: grid; grid-template-columns: 64px 40px 1fr auto; gap: 24px; align-items: start; padding: 34px 0; border-bottom: 1px solid var(--border); }
+    .srv-item:hover .srv-title { color: var(--gold); }
+    .srv-num { font-family: var(--f-display); font-size: .82rem; font-weight: 300; color: var(--muted); padding-top: 6px; }
+    .srv-icon { padding-top: 4px; color: var(--gold-dim); transition: color .3s; }
+    .srv-item:hover .srv-icon { color: var(--gold); }
+    .srv-icon svg { width: 22px; height: 22px; }
+    .srv-title { font-family: var(--f-display); font-size: clamp(22px, 2.8vw, 36px); font-weight: 700; color: var(--cream); margin-bottom: 10px; line-height: 1.05; transition: color .3s; }
+    .srv-desc { font-size: .88rem; color: var(--cream-dim); line-height: 1.65; max-width: 52ch; }
+    .srv-ar { font-family: var(--f-display); font-size: 1.1rem; font-weight: 600; color: var(--muted); direction: rtl; text-align: right; padding-top: 6px; white-space: nowrap; transition: color .3s; }
+    .srv-item:hover .srv-ar { color: var(--gold-dim); }
+    @media (max-width: 900px) { .srv-header { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .srv-item { grid-template-columns: 48px 32px 1fr; } .srv-ar { display: none; } }
 
-    /* ── PROCESS ─────────────────────────────── */
-    .process { background: var(--ink-1); }
-    .process-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 56px;
-    }
-    .process-step {
-      background: var(--ink-1);
-      padding: 44px 36px;
-      position: relative;
-      transition: background 0.3s;
-    }
-    .process-step:hover { background: var(--ink-2); }
-    .process-num {
-      font-family: var(--f-display);
-      font-size: 4.5rem;
-      font-weight: 300;
-      color: var(--ink-3);
-      line-height: 1;
-      margin-bottom: 20px;
-      transition: color 0.3s;
-    }
-    .process-step:hover .process-num { color: oklch(27% 0.006 265); }
-    .process-title {
-      font-family: var(--f-display);
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--cream);
-      margin-bottom: 12px;
-    }
-    .process-desc {
-      font-size: 0.875rem;
-      color: var(--cream-dim);
-      line-height: 1.7;
-    }
-    @media (max-width: 768px) {
-      .process-grid { grid-template-columns: 1fr; }
-    }
+    /* ── WORK / PORTFOLIO ────────────────────── */
+    .work { background: var(--ink-1); }
+    .work-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; margin-bottom: 72px; }
+    .work-intro p { font-size: 1rem; color: var(--cream-dim); line-height: 1.7; max-width: 48ch; align-self: end; }
 
-    /* ── PRICING ─────────────────────────────── */
-    .pricing-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-      margin-top: 56px;
-    }
-    .pricing-badge {
-      display: inline-block;
-      padding: 5px 14px;
-      background: oklch(80% 0.12 76 / 0.1);
-      border: 1px solid oklch(80% 0.12 76 / 0.28);
-      color: var(--gold);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border-radius: 2px;
-      margin-bottom: 28px;
-    }
-    .pricing-amount-row {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 6px;
-    }
-    .pricing-amount {
-      font-family: var(--f-display);
-      font-size: clamp(52px, 7.5vw, 88px);
-      font-weight: 700;
-      color: var(--cream);
-      line-height: 1;
-    }
-    .pricing-currency {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--gold);
-    }
-    .pricing-note {
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      margin-bottom: 32px;
-    }
-    .pricing-pitch {
-      font-size: 1rem;
-      color: var(--cream-dim);
-      line-height: 1.7;
-      max-width: 40ch;
-      margin-bottom: 20px;
-    }
-    .pricing-pitch-ar {
-      font-family: var(--f-display);
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--gold);
-      line-height: 1.5;
-    }
-    .pricing-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-    }
-    .pricing-feature {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.93rem;
-      color: var(--cream-dim);
-    }
-    .pricing-feature:first-child { border-top: 1px solid var(--border); }
-    .pricing-feature-dot { color: var(--gold); font-size: 0.55rem; flex-shrink: 0; }
-    .pricing-cta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      margin-top: 32px;
-      padding: 17px 32px;
-      background: var(--gold);
-      color: var(--ink);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-radius: 2px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .pricing-cta:hover { opacity: 0.88; transform: translateY(-2px); }
-    .pricing-disclaimer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 12px;
-      letter-spacing: 0.04em;
-    }
-    @media (max-width: 768px) {
-      .pricing-wrap { grid-template-columns: 1fr; gap: 52px; }
-    }
+    .project { margin-bottom: 80px; }
+    .project-meta { display: flex; align-items: center; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+    .project-num { font-family: var(--f-display); font-size: .82rem; font-weight: 300; color: var(--muted); }
+    .project-info { flex: 1; }
+    .project-name { font-family: var(--f-display); font-size: clamp(24px, 3vw, 40px); font-weight: 700; color: var(--cream); line-height: 1; margin-bottom: 4px; }
+    .project-type { font-size: .8rem; color: var(--muted); letter-spacing: .04em; }
+    .project-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: 1px solid var(--border); color: var(--cream-dim); font-size: .76rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; white-space: nowrap; transition: border-color .2s, color .2s, transform .2s; }
+    .project-link:hover { border-color: var(--gold-dim); color: var(--gold); transform: translateY(-2px); }
 
-    /* ── CTA SECTION ─────────────────────────── */
-    .cta-section {
+    .project-browser {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px oklch(0% 0 0 / .55), 0 0 0 1px oklch(100% 0 0 / .06);
       background: var(--ink-2);
-      text-align: center;
     }
-    .cta-section .section-heading {
-      max-width: 13ch;
-      margin: 0 auto 16px;
-    }
-    .cta-body {
-      font-size: 1.05rem;
-      color: var(--cream-dim);
-      max-width: 52ch;
-      margin: 0 auto 44px;
-      line-height: 1.7;
-    }
-    .cta-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 36px;
-      background: var(--gold);
-      color: var(--ink);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-radius: 2px;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 36px;
-      border: 1px solid var(--border);
-      color: var(--cream-dim);
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      border-radius: 2px;
-      transition: border-color 0.2s, color 0.2s, transform 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--gold-dim); color: var(--cream); transform: translateY(-2px); }
+    .project-bar { background: var(--ink-3); padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .p-dots { display: flex; gap: 6px; }
+    .p-dots span { width: 11px; height: 11px; border-radius: 50%; display: block; }
+    .p-dots span:nth-child(1) { background: #ff5f57; }
+    .p-dots span:nth-child(2) { background: #febc2e; }
+    .p-dots span:nth-child(3) { background: #28c840; }
+    .p-url { flex: 1; background: oklch(8% .007 265); border-radius: 5px; padding: 5px 12px; font-size: 11px; color: var(--muted); font-family: monospace; }
+    .project-screen img { width: 100%; display: block; }
 
-    /* ── FOOTER ──────────────────────────────── */
-    .footer {
-      padding: 44px 0;
-      border-top: 1px solid var(--border);
-    }
-    .footer-inner {
+    .project-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .tag { padding: 5px 14px; background: oklch(15% .007 265); border: 1px solid var(--border); color: var(--cream-dim); font-size: .72rem; font-weight: 600; letter-spacing: .08em; border-radius: 2px; }
+
+    .work-next {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px;
       flex-wrap: wrap;
-      gap: 20px;
     }
-    .footer-logo {
-      font-family: var(--f-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .footer-logo-mark { color: var(--gold); }
-    .footer-copy { font-size: 0.78rem; color: var(--muted); }
-    .footer-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
+    .work-next-label { font-size: .68rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .work-next-title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 36px); font-weight: 700; color: var(--cream); }
+    .work-next-cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gold); color: var(--ink); font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; white-space: nowrap; transition: opacity .2s, transform .2s; }
+    .work-next-cta:hover { opacity: .88; transform: translateY(-2px); }
+
+    @media (max-width: 768px) { .work-intro { grid-template-columns: 1fr; gap: 24px; } .work-next { flex-direction: column; align-items: flex-start; padding: 32px; } }
+
+    /* ── PROCESS ─────────────────────────────── */
+    .process { background: var(--ink); }
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 56px; }
+    .p-step { background: var(--ink); padding: 44px 36px; transition: background .3s; }
+    .p-step:hover { background: var(--ink-1); }
+    .p-num { font-family: var(--f-display); font-size: 4.5rem; font-weight: 300; color: var(--ink-3); line-height: 1; margin-bottom: 18px; transition: color .3s; }
+    .p-step:hover .p-num { color: oklch(27% .006 265); }
+    .p-title { font-family: var(--f-display); font-size: 1.75rem; font-weight: 700; color: var(--cream); margin-bottom: 12px; }
+    .p-desc { font-size: .875rem; color: var(--cream-dim); line-height: 1.7; }
+    @media (max-width: 768px) { .process-grid { grid-template-columns: 1fr; } }
+
+    /* ── PRICING ─────────────────────────────── */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 56px; }
+    .p-badge { display: inline-block; padding: 5px 14px; background: oklch(80% .12 76 / .1); border: 1px solid oklch(80% .12 76 / .28); color: var(--gold); font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; margin-bottom: 28px; }
+    .p-amount-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+    .p-amount { font-family: var(--f-display); font-size: clamp(52px, 7.5vw, 88px); font-weight: 700; color: var(--cream); line-height: 1; }
+    .p-currency { font-size: 1.3rem; font-weight: 600; color: var(--gold); }
+    .p-note { font-size: .78rem; color: var(--muted); margin-bottom: 32px; }
+    .p-pitch { font-size: 1rem; color: var(--cream-dim); line-height: 1.7; max-width: 40ch; margin-bottom: 20px; }
+    .p-pitch-ar { font-family: var(--f-display); font-size: 1.4rem; font-weight: 600; color: var(--gold); line-height: 1.5; }
+    .p-features { list-style: none; display: flex; flex-direction: column; }
+    .p-feat { display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--border); font-size: .93rem; color: var(--cream-dim); }
+    .p-feat:first-child { border-top: 1px solid var(--border); }
+    .p-dot { color: var(--gold); font-size: .55rem; flex-shrink: 0; }
+    .p-cta { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 32px; padding: 17px 32px; background: var(--gold); color: var(--ink); font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; transition: opacity .2s, transform .2s; }
+    .p-cta:hover { opacity: .88; transform: translateY(-2px); }
+    .p-disc { text-align: center; font-size: .75rem; color: var(--muted); margin-top: 12px; }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; gap: 52px; } }
+
+    /* ── CTA ─────────────────────────────────── */
+    .cta { background: var(--ink-2); text-align: center; }
+    .cta .s-head { max-width: 13ch; margin: 0 auto 16px; }
+    .cta-body { font-size: 1.05rem; color: var(--cream-dim); max-width: 52ch; margin: 0 auto 44px; line-height: 1.7; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-gold { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; background: var(--gold); color: var(--ink); font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border-radius: 2px; transition: opacity .2s, transform .2s; }
+    .btn-gold:hover { opacity: .88; transform: translateY(-2px); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; border: 1px solid var(--border); color: var(--cream-dim); font-size: .82rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; border-radius: 2px; transition: border-color .2s, color .2s, transform .2s; }
+    .btn-ghost:hover { border-color: var(--gold-dim); color: var(--cream); transform: translateY(-2px); }
+
+    /* ── FOOTER ──────────────────────────────── */
+    .footer { padding: 44px 0; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-family: var(--f-display); font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .footer-logo .ac { color: var(--gold); }
+    .footer-copy { font-size: .78rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 28px; list-style: none; font-size: .78rem; color: var(--muted); }
     .footer-links a:hover { color: var(--cream-dim); }
 
     /* ── WHATSAPP FLOAT ──────────────────────── */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      z-index: 300;
-      width: 54px; height: 54px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 24px oklch(0% 0 0 / 0.35);
-      transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
-    }
-    .whatsapp-float:hover { transform: scale(1.12) translateY(-2px); box-shadow: 0 8px 32px oklch(0% 0 0 / 0.45); }
-    .whatsapp-float svg { width: 28px; height: 28px; fill: white; }
+    .wa-float { position: fixed; bottom: 32px; right: 32px; z-index: 300; width: 54px; height: 54px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px oklch(0% 0 0 / .35); transition: transform .25s var(--ease), box-shadow .25s; }
+    .wa-float:hover { transform: scale(1.12) translateY(-2px); box-shadow: 0 8px 32px oklch(0% 0 0 / .45); }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
 
     /* ── KEYFRAMES ───────────────────────────── */
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.5; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.25); }
-    }
-    @keyframes marqueeScroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scrollPulse { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+    @keyframes marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── SCROLL INDICATOR ────────────────────── */
+    .hero-scroll { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); animation: fadeIn 1s var(--ease) 1.5s both; }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold-dim), transparent); animation: scrollPulse 2.2s ease-in-out 1.8s infinite; }
   </style>
 </head>
 <body>
@@ -669,39 +306,55 @@
 
   <!-- NAV -->
   <header class="nav" id="nav">
-    <a href="#" class="nav-logo">
-      <span class="nav-logo-mark">✦</span>Weblix
-    </a>
+    <a href="#" class="logo"><span class="logo-star">✦</span>Weblix</a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
-      <li><a href="#process">Process</a></li>
+      <li><a href="#work">Work</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <a href="https://wa.me/201XXXXXXXXX" class="nav-cta" target="_blank" rel="noopener">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
+    <a href="https://wa.me/201XXXXXXXXX" class="nav-wa" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       WhatsApp
     </a>
   </header>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="container hero-inner">
-      <p class="hero-label">Cairo, Egypt &nbsp;&middot;&nbsp; Web Agency &nbsp;&middot;&nbsp; Est. 2025</p>
-      <h1 class="hero-title">Web<em>lix</em></h1>
-      <div class="hero-bottom">
-        <div class="hero-tagline-en">
-          <strong>We build websites.</strong><br>
-          We build businesses.
+  <div class="hero-bg"></div>
+  <section style="position:relative;">
+    <div class="hero">
+      <!-- Left: text -->
+      <div class="hero-left">
+        <p class="hero-label">Cairo, Egypt &nbsp;&middot;&nbsp; Web Agency &nbsp;&middot;&nbsp; Est. 2025</p>
+        <h1 class="hero-title">Web<em>lix</em></h1>
+        <div class="hero-tagline">
+          <p class="hero-tagline-en"><strong>We build websites.</strong><br>We build businesses.</p>
+          <p class="hero-tagline-ar">نبني مواقع، نبني بيزنسات</p>
         </div>
-        <div class="hero-tagline-ar">نبني مواقع،<br>نبني بيزنسات</div>
+      </div>
+
+      <!-- Right: device mockups -->
+      <div class="hero-right">
+        <div class="device-browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">abdulslmys-123.github.io/cloudnine/</div>
+          </div>
+          <div class="browser-screen">
+            <img src="labeaute-preview.png" alt="La Beauté website" loading="eager">
+          </div>
+        </div>
+        <div class="device-phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <img src="labeaute-mobile.png" alt="La Beauté mobile" loading="eager">
+          </div>
+          <div class="phone-home"></div>
+        </div>
       </div>
     </div>
     <div class="hero-scroll">
-      <div class="hero-scroll-line"></div>
+      <div class="scroll-line"></div>
       <span>Scroll</span>
     </div>
   </section>
@@ -709,40 +362,40 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <span class="marquee-item">Professional Websites <span class="dot">✦</span></span>
-      <span class="marquee-item">حجز واتساب تلقائي <span class="dot">✦</span></span>
-      <span class="marquee-item">Google Visibility <span class="dot">✦</span></span>
-      <span class="marquee-item">7 Days Delivery <span class="dot">✦</span></span>
-      <span class="marquee-item">No Monthly Fees <span class="dot">✦</span></span>
-      <span class="marquee-item">Egyptian Market <span class="dot">✦</span></span>
-      <span class="marquee-item">WhatsApp Booking <span class="dot">✦</span></span>
-      <span class="marquee-item">مواقع احترافية <span class="dot">✦</span></span>
-      <span class="marquee-item">Professional Websites <span class="dot">✦</span></span>
-      <span class="marquee-item">حجز واتساب تلقائي <span class="dot">✦</span></span>
-      <span class="marquee-item">Google Visibility <span class="dot">✦</span></span>
-      <span class="marquee-item">7 Days Delivery <span class="dot">✦</span></span>
-      <span class="marquee-item">No Monthly Fees <span class="dot">✦</span></span>
-      <span class="marquee-item">Egyptian Market <span class="dot">✦</span></span>
-      <span class="marquee-item">WhatsApp Booking <span class="dot">✦</span></span>
-      <span class="marquee-item">مواقع احترافية <span class="dot">✦</span></span>
+      <span class="m-item">Professional Websites <span class="dot">✦</span></span>
+      <span class="m-item">حجز واتساب تلقائي <span class="dot">✦</span></span>
+      <span class="m-item">Google Visibility <span class="dot">✦</span></span>
+      <span class="m-item">7 Days Delivery <span class="dot">✦</span></span>
+      <span class="m-item">No Monthly Fees <span class="dot">✦</span></span>
+      <span class="m-item">Egyptian Market <span class="dot">✦</span></span>
+      <span class="m-item">WhatsApp Booking <span class="dot">✦</span></span>
+      <span class="m-item">مواقع احترافية <span class="dot">✦</span></span>
+      <span class="m-item">Professional Websites <span class="dot">✦</span></span>
+      <span class="m-item">حجز واتساب تلقائي <span class="dot">✦</span></span>
+      <span class="m-item">Google Visibility <span class="dot">✦</span></span>
+      <span class="m-item">7 Days Delivery <span class="dot">✦</span></span>
+      <span class="m-item">No Monthly Fees <span class="dot">✦</span></span>
+      <span class="m-item">Egyptian Market <span class="dot">✦</span></span>
+      <span class="m-item">WhatsApp Booking <span class="dot">✦</span></span>
+      <span class="m-item">مواقع احترافية <span class="dot">✦</span></span>
     </div>
   </div>
 
   <!-- INTRO -->
   <section class="section intro" id="about">
-    <div class="container">
+    <div class="wrap">
       <div class="intro-grid">
-        <div class="reveal">
-          <p class="section-label">About</p>
+        <div class="rv">
+          <p class="s-label">About</p>
           <p class="intro-body">
             We build <strong>professional websites</strong> for Egyptian businesses — salons, clinics, gyms, restaurants, and more.
             Your site is live in <strong>7 days</strong>, books clients on WhatsApp automatically, and shows up on Google.
             One payment. No monthly fees. Ever.
           </p>
         </div>
-        <div class="intro-ar reveal reveal-d2">
-          <span class="accent">Weblix</span> متخصصة في<br>
-          بناء مواقع <span class="accent">البيزنس المصري</span>
+        <div class="intro-ar rv d2">
+          <span class="ac">Weblix</span> متخصصة في<br>
+          بناء مواقع <span class="ac">البيزنس المصري</span>
         </div>
       </div>
     </div>
@@ -750,76 +403,144 @@
 
   <!-- SERVICES -->
   <section class="section" id="services">
-    <div class="container">
-      <div class="services-header reveal">
+    <div class="wrap">
+      <div class="srv-header rv">
         <div>
-          <p class="section-label">Services</p>
-          <h2 class="section-heading">What<br>we do</h2>
+          <p class="s-label">Services</p>
+          <h2 class="s-head">What<br>we do</h2>
         </div>
         <p>Everything your business needs to win online — built, live, and working from day one. No technical knowledge required.</p>
       </div>
 
-      <div class="services-list">
-        <div class="service-item reveal">
-          <span class="service-num">01</span>
+      <div class="srv-list">
+        <div class="srv-item rv">
+          <span class="srv-num">01</span>
+          <span class="srv-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </span>
           <div>
-            <h3 class="service-title">Professional Website</h3>
-            <p class="service-desc">A complete, custom website built for your business. Your brand, your services, your photos. Designed to convert visitors into paying clients.</p>
+            <h3 class="srv-title">Professional Website</h3>
+            <p class="srv-desc">A complete, custom website built for your business. Your brand, your services, your photos. Designed to convert visitors into paying clients.</p>
           </div>
-          <span class="service-ar">موقع احترافي</span>
+          <span class="srv-ar">موقع احترافي</span>
         </div>
 
-        <div class="service-item reveal reveal-d1">
-          <span class="service-num">02</span>
+        <div class="srv-item rv d1">
+          <span class="srv-num">02</span>
+          <span class="srv-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.1-.471-.149-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M5 4h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/></svg>
+          </span>
           <div>
-            <h3 class="service-title">WhatsApp Booking</h3>
-            <p class="service-desc">Clients fill a form on your site and you get an instant WhatsApp message. Automatic bookings 24/7 — even while you sleep.</p>
+            <h3 class="srv-title">WhatsApp Booking</h3>
+            <p class="srv-desc">Clients fill a form on your site and you get an instant WhatsApp message. Automatic bookings 24/7 — even while you sleep.</p>
           </div>
-          <span class="service-ar">حجز واتساب</span>
+          <span class="srv-ar">حجز واتساب</span>
         </div>
 
-        <div class="service-item reveal reveal-d2">
-          <span class="service-num">03</span>
+        <div class="srv-item rv d2">
+          <span class="srv-num">03</span>
+          <span class="srv-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v3m0 0v3m0-3h3m-3 0H8"/></svg>
+          </span>
           <div>
-            <h3 class="service-title">Google Visibility</h3>
-            <p class="service-desc">We set up your Google Business Profile and optimize your site so clients find you when they search your service in your area.</p>
+            <h3 class="srv-title">Google Visibility</h3>
+            <p class="srv-desc">We set up your Google Business Profile and optimize your site so clients find you when they search your service in your area.</p>
           </div>
-          <span class="service-ar">ظهور على جوجل</span>
+          <span class="srv-ar">ظهور على جوجل</span>
         </div>
 
-        <div class="service-item reveal reveal-d3">
-          <span class="service-num">04</span>
+        <div class="srv-item rv d3">
+          <span class="srv-num">04</span>
+          <span class="srv-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
           <div>
-            <h3 class="service-title">Website Management</h3>
-            <p class="service-desc">We handle updates, changes, and maintenance. You focus on running your business. We take care of everything online.</p>
+            <h3 class="srv-title">Website Management</h3>
+            <p class="srv-desc">We handle updates, changes, and maintenance. You focus on running your business. We take care of everything online.</p>
           </div>
-          <span class="service-ar">إدارة الموقع</span>
+          <span class="srv-ar">إدارة الموقع</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK / PORTFOLIO -->
+  <section class="section work" id="work">
+    <div class="wrap">
+      <div class="work-intro rv">
+        <div>
+          <p class="s-label">Our Work</p>
+          <h2 class="s-head">What we've<br><em>built.</em></h2>
+        </div>
+        <p>Real businesses, real results. Every site we build is live, functional, and already bringing in clients.</p>
+      </div>
+
+      <!-- Project: La Beauté -->
+      <div class="project rv">
+        <div class="project-meta">
+          <span class="project-num">01</span>
+          <div class="project-info">
+            <h3 class="project-name">La Beauté</h3>
+            <p class="project-type">Nail Spa &amp; Beauty Salon &nbsp;&middot;&nbsp; Zayed Dunes Mall, Giza</p>
+          </div>
+          <a href="https://abdulslmys-123.github.io/cloudnine/" class="project-link" target="_blank" rel="noopener">
+            View Live
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </a>
+        </div>
+
+        <div class="project-browser">
+          <div class="project-bar">
+            <div class="p-dots"><span></span><span></span><span></span></div>
+            <div class="p-url">abdulslmys-123.github.io/cloudnine/</div>
+          </div>
+          <div class="project-screen">
+            <img src="labeaute-preview.png" alt="La Beauté — Nail Spa & Beauty Salon website" loading="lazy">
+          </div>
+        </div>
+
+        <div class="project-tags">
+          <span class="tag">Website Design</span>
+          <span class="tag">WhatsApp Booking</span>
+          <span class="tag">Google Profile</span>
+          <span class="tag">Mobile-First</span>
+        </div>
+      </div>
+
+      <!-- CTA: next project -->
+      <div class="work-next rv d2">
+        <div>
+          <p class="work-next-label">Your business</p>
+          <p class="work-next-title">Could be next on this list.</p>
+        </div>
+        <a href="https://wa.me/201XXXXXXXXX" class="work-next-cta" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Let's Build Yours
+        </a>
       </div>
     </div>
   </section>
 
   <!-- PROCESS -->
   <section class="section process" id="process">
-    <div class="container">
-      <p class="section-label reveal">How it works</p>
-      <h2 class="section-heading reveal reveal-d1">Three steps.<br><em>That's it.</em></h2>
-
+    <div class="wrap">
+      <p class="s-label rv">How it works</p>
+      <h2 class="s-head rv d1">Three steps.<br><em>That's it.</em></h2>
       <div class="process-grid">
-        <div class="process-step reveal">
-          <div class="process-num">01</div>
-          <h3 class="process-title">We Talk</h3>
-          <p class="process-desc">A 15-minute call or WhatsApp conversation. We learn about your business, your services, and what you need your website to do.</p>
+        <div class="p-step rv">
+          <div class="p-num">01</div>
+          <h3 class="p-title">We Talk</h3>
+          <p class="p-desc">A 15-minute call or WhatsApp. We learn about your business, your services, and what you need your website to do.</p>
         </div>
-        <div class="process-step reveal reveal-d1">
-          <div class="process-num">02</div>
-          <h3 class="process-title">We Build</h3>
-          <p class="process-desc">In 7 days, your complete website is ready. Your content, your style, your WhatsApp booking system — all built and tested.</p>
+        <div class="p-step rv d1">
+          <div class="p-num">02</div>
+          <h3 class="p-title">We Build</h3>
+          <p class="p-desc">In 7 days, your complete website is ready. Your content, your style, your WhatsApp booking system — all built and tested.</p>
         </div>
-        <div class="process-step reveal reveal-d2">
-          <div class="process-num">03</div>
-          <h3 class="process-title">You Launch</h3>
-          <p class="process-desc">We make it live. Clients can find you, see your work, and book you from day one. Results start immediately.</p>
+        <div class="p-step rv d2">
+          <div class="p-num">03</div>
+          <h3 class="p-title">You Launch</h3>
+          <p class="p-desc">We make it live. Clients can find you, see your work, and book you from day one. Results start immediately.</p>
         </div>
       </div>
     </div>
@@ -827,71 +548,64 @@
 
   <!-- PRICING -->
   <section class="section" id="pricing">
-    <div class="container">
-      <p class="section-label reveal">Pricing</p>
-      <h2 class="section-heading reveal reveal-d1">Transparent.<br><em>No surprises.</em></h2>
-
-      <div class="pricing-wrap">
-        <div class="reveal">
-          <div class="pricing-badge">One-Time Payment</div>
-          <div class="pricing-amount-row">
-            <span class="pricing-amount">3,999</span>
-            <span class="pricing-currency">EGP</span>
+    <div class="wrap">
+      <p class="s-label rv">Pricing</p>
+      <h2 class="s-head rv d1">Transparent.<br><em>No surprises.</em></h2>
+      <div class="pricing-grid">
+        <div class="rv">
+          <div class="p-badge">One-Time Payment</div>
+          <div class="p-amount-row">
+            <span class="p-amount">3,999</span>
+            <span class="p-currency">EGP</span>
           </div>
-          <p class="pricing-note">Starting price &middot; varies based on your needs</p>
-          <p class="pricing-pitch">Less than what you earn in a single day — for a website that works for you every day, forever.</p>
-          <p class="pricing-pitch-ar">أقل من يوم عمل.<br>لموقع يشتغل طول العمر.</p>
+          <p class="p-note">Starting price &middot; varies based on your needs</p>
+          <p class="p-pitch">Less than what you earn in a single day — for a website that works for you every day, forever.</p>
+          <p class="p-pitch-ar">أقل من يوم عمل.<br>لموقع يشتغل طول العمر.</p>
         </div>
-
-        <div class="reveal reveal-d2">
-          <ul class="pricing-features">
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> Complete professional website, built from scratch</li>
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> WhatsApp booking system, works 24/7</li>
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> Google Business Profile setup</li>
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> Perfect on every phone and screen</li>
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> Your brand, photos, and services included</li>
-            <li class="pricing-feature"><span class="pricing-feature-dot">✦</span> Live and ready within 7 days</li>
+        <div class="rv d2">
+          <ul class="p-features">
+            <li class="p-feat"><span class="p-dot">✦</span> Complete professional website, built from scratch</li>
+            <li class="p-feat"><span class="p-dot">✦</span> WhatsApp booking system, works 24/7</li>
+            <li class="p-feat"><span class="p-dot">✦</span> Google Business Profile setup</li>
+            <li class="p-feat"><span class="p-dot">✦</span> Perfect on every phone and screen</li>
+            <li class="p-feat"><span class="p-dot">✦</span> Your brand, photos, and services included</li>
+            <li class="p-feat"><span class="p-dot">✦</span> Live and ready within 7 days</li>
           </ul>
-          <a href="https://wa.me/201XXXXXXXXX" class="pricing-cta" target="_blank" rel="noopener">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
+          <a href="https://wa.me/201XXXXXXXXX" class="p-cta" target="_blank" rel="noopener">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Get Started on WhatsApp
           </a>
-          <p class="pricing-disclaimer">One time. No monthly fees. Ever.</p>
+          <p class="p-disc">One time. No monthly fees. Ever.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
-  <section class="section cta-section" id="contact">
-    <div class="container">
-      <p class="section-label reveal">Ready?</p>
-      <h2 class="section-heading reveal reveal-d1">Let's build<br><em>your website.</em></h2>
-      <p class="cta-body reveal reveal-d2">Your business deserves a professional online presence. Let's get you live in 7 days.</p>
-      <div class="cta-buttons reveal reveal-d3">
-        <a href="https://wa.me/201XXXXXXXXX" class="btn-primary" target="_blank" rel="noopener">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
+  <section class="section cta" id="contact">
+    <div class="wrap">
+      <p class="s-label rv">Ready?</p>
+      <h2 class="s-head rv d1">Let's build<br><em>your website.</em></h2>
+      <p class="cta-body rv d2">Your business deserves a professional online presence. Let's get you live in 7 days.</p>
+      <div class="cta-btns rv d3">
+        <a href="https://wa.me/201XXXXXXXXX" class="btn-gold" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Message on WhatsApp
         </a>
-        <a href="mailto:salmaniyousef41111@gmail.com" class="btn-secondary">Send an Email</a>
+        <a href="mailto:salmaniyousef41111@gmail.com" class="btn-ghost">Send an Email</a>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer">
-    <div class="container">
+    <div class="wrap">
       <div class="footer-inner">
-        <div class="footer-logo">
-          <span class="footer-logo-mark">✦</span>Weblix
-        </div>
+        <div class="footer-logo"><span class="ac">✦</span>Weblix</div>
         <p class="footer-copy">&copy; 2025 Weblix Web Agency &middot; Cairo, Egypt</p>
         <ul class="footer-links">
           <li><a href="#services">Services</a></li>
+          <li><a href="#work">Work</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -900,56 +614,40 @@
   </footer>
 
   <!-- WHATSAPP FLOAT -->
-  <a href="https://wa.me/201XXXXXXXXX" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
-    <svg viewBox="0 0 24 24">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
+  <a href="https://wa.me/201XXXXXXXXX" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
   <script>
     /* ── GRAIN ─────────────────────────────── */
-    (function () {
-      const canvas = document.createElement('canvas');
-      const s = 256;
-      canvas.width = canvas.height = s;
-      const ctx = canvas.getContext('2d');
-      const d = ctx.createImageData(s, s);
-      for (let i = 0; i < d.data.length; i += 4) {
-        const v = Math.random() * 255 | 0;
-        d.data[i] = d.data[i + 1] = d.data[i + 2] = v;
-        d.data[i + 3] = 255;
-      }
-      ctx.putImageData(d, 0, 0);
-      document.getElementById('grain').style.backgroundImage = `url(${canvas.toDataURL()})`;
+    (function(){
+      const c = document.createElement('canvas'), s = 256;
+      c.width = c.height = s;
+      const ctx = c.getContext('2d'), d = ctx.createImageData(s,s);
+      for(let i=0;i<d.data.length;i+=4){const v=Math.random()*255|0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255;}
+      ctx.putImageData(d,0,0);
+      document.getElementById('grain').style.backgroundImage=`url(${c.toDataURL()})`;
     })();
 
     /* ── CURSOR ────────────────────────────── */
-    const cursor = document.getElementById('cursor');
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    (function loop() {
-      cx += (mx - cx) * 0.14;
-      cy += (my - cy) * 0.14;
-      cursor.style.left = cx + 'px';
-      cursor.style.top = cy + 'px';
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+    const cur = document.getElementById('cursor');
+    let mx=0,my=0,cx=0,cy=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+    (function loop(){cx+=(mx-cx)*.14;cy+=(my-cy)*.14;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(loop);})();
+    document.querySelectorAll('a,button').forEach(el=>{
+      el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+      el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
     });
 
-    /* ── NAV SCROLL ────────────────────────── */
+    /* ── NAV ───────────────────────────────── */
     const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', scrollY > 60);
-    }, { passive: true });
+    window.addEventListener('scroll',()=>nav.classList.toggle('on',scrollY>60),{passive:true});
 
-    /* ── SCROLL REVEAL ─────────────────────── */
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    /* ── REVEAL ────────────────────────────── */
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show');});
+    },{threshold:.1,rootMargin:'0px 0px -36px 0px'});
+    document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   </script>
 </body>
 </html>
