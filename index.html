@@ -115,6 +115,9 @@ h1 b{color:var(--gold);font-weight:800}
 .price-card{background:linear-gradient(160deg,var(--ink-2),var(--ink-1));border:1px solid rgba(232,184,109,.3);border-radius:22px;padding:38px 34px}
 .price-card .tag{display:inline-block;font-size:.76rem;letter-spacing:.14em;color:var(--gold);border:1px solid rgba(232,184,109,.3);border-radius:30px;padding:5px 14px;margin-bottom:18px}
 .price-card h3{font-size:1.7rem;margin-bottom:10px;font-weight:800}
+.price-num{margin:14px 0 4px;font-size:1.05rem;color:var(--cream-dim)}
+.price-num b{font-family:var(--dis);font-size:2.6rem;color:var(--gold);font-weight:700;margin:0 6px}
+.price-num span{display:block;font-size:.84rem;color:var(--muted);margin-top:2px}
 .price-card ul{list-style:none;margin:20px 0 26px;display:grid;gap:11px}
 .price-card li{display:flex;gap:10px;align-items:flex-start;color:var(--cream-dim);font-size:.96rem}
 .price-card li::before{content:'✓';color:var(--gold);font-weight:700}
@@ -222,7 +225,7 @@ footer .logo{justify-content:center;margin-bottom:10px}
       <div class="card rv"><div class="ico">📍</div><h3>ظهور على Google</h3><p>بنظبط ملفكم على Google وبنحسّن الموقع، عشان لما حد يدور على خدمتكم في منطقتكم يلاقيكم إنتوا.</p><span class="lbl en">Google Visibility</span></div>
       <div class="card rv"><div class="ico">📱</div><h3>مظبوط على كل موبايل</h3><p>أغلب عملائكم بيدخلوا من الموبايل. الموقع بيتفتح بسرعة ويبان مظبوط على أي شاشة.</p><span class="lbl en">Mobile First</span></div>
       <div class="card rv"><div class="ico">🎨</div><h3>تصميم بهويتكم</h3><p>ألوان وخطوط وشكل يناسب البيزنس بتاعكم — مش تمبليت جاهز زي أي حد.</p><span class="lbl en">Brand Design</span></div>
-      <div class="card rv"><div class="ico">🛠️</div><h3>تعديلات ودعم</h3><p>عايز تغير صورة أو سعر أو تضيف خدمة؟ كلمنا وإحنا بنظبطها. الموقع بيفضل ملكك.</p><span class="lbl en">Support &amp; Edits</span></div>
+      <div class="card rv"><div class="ico">🛠️</div><h3>شهر تعديلات مجاني</h3><p>بعد التسليم بشهر كامل، أي تغيير في صورة أو سعر أو خدمة بتبعتهولنا وإحنا بنظبطه — مجاناً.</p><span class="lbl en">Support &amp; Edits</span></div>
     </div>
   </div>
 </section>
@@ -279,22 +282,25 @@ footer .logo{justify-content:center;margin-bottom:10px}
       <div class="price-card rv">
         <span class="tag">الباقة الأساسية</span>
         <h3>موقع كامل لبيزنسك</h3>
-        <p style="color:var(--cream-dim)">كل اللي محتاجه عشان تبدأ تستقبل عملاء من النهارده.</p>
+        <div class="price-num">يبدأ من <b>٣٠٠٠</b> جنيه <span>مرة واحدة · من غير اشتراك شهري</span></div>
         <ul>
           <li>تصميم مخصوص باسمكم وصوركم</li>
           <li>فورم حجز بيوصل واتساب ٢٤ ساعة</li>
+          <li>ربط الإنستجرام والفيسبوك والتيك توك بالموقع</li>
           <li>صفحة خدمات وأسعار ومعرض صور</li>
           <li>آراء عملائكم من Google</li>
           <li>مظبوط على الموبايل والكمبيوتر</li>
           <li>تسليم في ٤٨ ساعة</li>
-          <li>تعديلات بعد التسليم</li>
+          <li><b style="color:var(--cream)">شهر كامل تعديلات مجانية بعد التسليم</b></li>
         </ul>
-        <a class="btn-gold" href="https://wa.me/201041772336?text=%D8%B9%D8%A7%D9%88%D8%B2%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A7%D9%84%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1" target="_blank" rel="noopener">اعرف السعر على واتساب</a>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:22px">السعر بيزيد حسب عدد الصفحات والخدمات. ولو الميزانية أقل، قولولنا إنتوا مستعدين تدفعوا كام وهنشوف نعمل إيه 🤝</p>
+        <a class="btn-gold" href="https://wa.me/201041772336?text=%D8%B9%D8%A7%D9%88%D8%B2%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%A7%D9%84%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1" target="_blank" rel="noopener">اعرف التفاصيل على واتساب</a>
       </div>
       <div class="note rv">
-        <h3>قولولنا ميزانيتكم 🤝</h3>
-        <p>إحنا فاهمين إن كل بيزنس ظروفه مختلفة. قولولنا إنتوا مستعدين تدفعوا كام، وإحنا هنظبطها مع بعض ونوصل لحل يناسب الطرفين.</p>
-        <p style="color:var(--gold)">دفعة واحدة · من غير اشتراك شهري · الموقع ملككم</p>
+        <h3>وبعد الشهر المجاني؟ 🛠️</h3>
+        <p>الموقع ملككم وبيفضل شغال زي ما هو، من غير أي اشتراك.</p>
+        <p>ولو حابين إحنا نفضل معاكم — تعديل الأسعار والصور والعروض، ومتابعة الموقع وتحديثه — فيه <b style="color:var(--cream)">اشتراك سنوي اختياري</b>.</p>
+        <p style="color:var(--gold)">اختياري تماماً · الموقع شغال من غيره</p>
       </div>
     </div>
   </div>
@@ -311,7 +317,7 @@ footer .logo{justify-content:center;margin-bottom:10px}
       <details class="rv"><summary>فعلاً الموقع بيبقى جاهز في ٤٨ ساعة؟</summary><p>أيوه. أول ما توصلنا الصور والمعلومات بنبدأ على طول، وخلال ٤٨ ساعة بيبقى الموقع جاهز وشغال. التعديلات بعد كده بناخدها معاكم أول بأول.</p></details>
       <details class="rv"><summary>أنا مش فاهم في التقنية خالص، هعرف أتعامل مع الموقع؟</summary><p>مش محتاج تفهم أي حاجة. إحنا بنعمل كل حاجة من الألف للياء، وأي تعديل بعد كده بتبعتلنا رسالة واتساب وإحنا بننفذه.</p></details>
       <details class="rv"><summary>الحجز بيوصلني إزاي؟</summary><p>العميل بيملا فورم على الموقع ويضغط إرسال، فتوصلك رسالة واتساب فيها اسمه ورقمه والخدمة والميعاد اللي طلبه.</p></details>
-      <details class="rv"><summary>في اشتراك شهري؟</summary><p>لأ. بتدفع مرة واحدة بس والموقع بيفضل شغال. لو حبيت دومين خاص (اسم موقع بتاعك) ده بيبقى رسم سنوي بسيط بيروح للشركة صاحبة الدومين مش لينا.</p></details>
+      <details class="rv"><summary>في اشتراك شهري؟</summary><p>لأ. بتدفع مرة واحدة بس والموقع بيفضل شغال وملكك. وبعد التسليم بتاخد شهر كامل تعديلات مجانية. لو حبيت بعد كده إحنا نتابع الموقع ونعدّل فيه ليك، فيه اشتراك سنوي اختياري — والموقع شغال من غيره عادي.</p></details>
       <details class="rv"><summary>ينفع الموقع يبقى بالعربي؟</summary><p>طبعاً. بنعمله عربي بالكامل، أو عربي وإنجليزي مع بعض، زي ما يريحكم.</p></details>
       <details class="rv"><summary>وبعد التسليم؟</summary><p>الموقع بيبقى ملككم. بنفضل معاكم لأي تعديل أو إضافة، وبنساعدكم تظهروا على Google.</p></details>
     </div>
